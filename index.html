@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RifkyShre-AI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0088cc;
+      --secondary-color: #006ba1;
+      --background-color: #f0f2f5;
+      --message-user-bg: #dcf8c6;
+      --message-bot-bg: #ffffff;
+      --header-height: 60px;
+      --footer-height: 70px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--background-color);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #chatApp {
+      width: 100%;
+      max-width: 1000px;
+      height: 100vh;
+      background: #fff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header {
+      height: var(--header-height);
+      background: var(--primary-color);
+      color: white;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .chat-header .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-header .avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chat-header .info h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .chat-header .info p {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .chat-header .options {
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .chat-header .options:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    #chatMessages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #e5ddd5;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zM22.344 0L13.857 8.485 15.272 9.9l7.9-7.9h-.828zm5.656 0L19.515 8.485 20.93 9.9l8.485-8.485h-1.414zM32.658 0l-8.485 8.485L25.587 9.9l8.485-8.485h-1.414zm5.656 0l-8.485 8.485L31.243 9.9l8.485-8.485h-1.414zm5.656 0l-8.485 8.485L36.9 9.9l8.485-8.485h-1.414zm5.656 0l-8.485 8.485L42.556 9.9l8.485-8.485h-1.414zm5.656 0l-8.485 8.485L48.213 9.9l8.485-8.485h-1.414zM1.414 0L0 1.414l8.485 8.485h1.414L1.414 0zm5.656 0L0 7.07l8.485 8.485h1.414L7.07 0zm5.656 0L0 12.727l8.485 8.485h1.414L12.727 0zm5.656 0L0 18.384l8.485 8.485h1.414L18.384 0zm5.657 0L0 24.04l8.485 8.485h1.414L24.04 0zm5.657 0L0 29.698l8.485 8.485h1.414L29.698 0zm5.657 0L0 35.355l8.485 8.485h1.414L35.355 0zm5.657 0L0 41.012l8.485 8.485h1.414L41.012 0zm5.657 0L0 46.67l8.485 8.485h1.414L46.67 0zm5.657 0L0 52.326l8.485 8.485h1.414L52.326 0zM60 0L51.515 8.485 52.93 9.9 60 2.828V0zm0 5.657L54.343 11.314 55.757 12.728 60 8.485V5.657zm0 5.657L60 8.485 51.515 16.97l1.414 1.415L60 11.314v-5.657zm0 5.657L60 14.142 51.515 22.627l1.414 1.415L60 16.97v-5.657zm0 5.657L60 19.8 51.515 28.284l1.414 1.415L60 22.627v-5.657zm0 5.657L60 25.456 51.515 33.94l1.414 1.415L60 28.284v-5.657zm0 5.657L60 31.113 51.515 39.598l1.414 1.415L60 33.94v-5.657zm0 5.657L60 36.77 51.515 45.255l1.414 1.415L60 39.598v-5.657zm0 5.657L60 42.426 51.515 50.912l1.414 1.415L60 45.255v-5.657zm0 5.657L60 48.083 51.515 56.568l1.414 1.415L60 50.912v-5.657zM0 60l8.485-8.485-1.414-1.414L0 57.172V60zm0-5.657l8.485-8.485-1.414-1.414L0 51.515v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 45.858v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 40.201v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 34.544v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 28.887v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 23.23v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 17.573v2.828zm0-5.657l8.485-8.485-1.414-1.414L0 11.916v2.828zm0-5.657l8.485-8.485L7.07 0H4.243L0 4.243v2.828z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+
+    .message {
+      margin: 8px 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+      position: relative;
+      animation: messageAppear 0.3s ease-out;
+    }
+
+    @keyframes messageAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      background: var(--message-user-bg);
+      align-self: flex-end;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.bot {
+      background: var(--message-bot-bg);
+      align-self: flex-start;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .message pre {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+
+    .message code {
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 14px;
+    }
+
+    .copy-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-icon:hover {
+      background: rgba(0, 136, 204, 0.1);
+    }
+
+    .input-area {
+      height: var(--footer-height);
+      padding: 12px 20px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 15px;
+      background: #f0f2f5;
+      transition: all 0.3s;
+    }
+
+    #userInput:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: #fff;
+    }
+
+    .send-button {
+      width: 45px;
+      height: 45px;
+      border: none;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-button:hover {
+      background: var(--secondary-color);
+      transform: scale(1.05);
+    }
+
+    .send-button:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+      #chatApp {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+      }
+
+      .message {
+        max-width: 85%;
+      }
+
+      .input-area {
+        padding: 10px;
+      }
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--message-bot-bg);
+      border-radius: 12px;
+      align-self: flex-start;
+      margin-bottom: 8px;
+      animation: messageAppear 0.3s ease-out;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #90949c;
+      border-radius: 50%;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: 200ms;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 300ms;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 400ms;
+    }
+
+    @keyframes typingAnimation {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-4px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chatApp">
+    <div class="chat-header">
+      <div class="title">
+        <div class="avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="info">
+          <h1>RifkyShre-AI</h1>
+          <p>Online</p>
+        </div>
+      </div>
+      <div class="options">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+    </div>
+    <div id="chatMessages"></div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Ketik pesan Anda..." onkeydown="checkEnter(event)">
+      <button class="send-button" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const messageInput = document.getElementById('userInput');
+    const sendButton = document.querySelector('.send-button');
+    const chatMessages = document.getElementById('chatMessages');
+
+    function showTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'typing-indicator';
+      indicator.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    `;
+      chatMessages.appendChild(indicator);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return indicator;
+    }
+
+    function appendMessage(text, type, isCode = false) {
+      const message = document.createElement('div');
+      message.classList.add('message', type);
+
+      if (type === 'bot') {
+        if (isCode) {
+          const preElement = document.createElement('pre');
+          const codeElement = document.createElement('code');
+          codeElement.textContent = text;
+          preElement.appendChild(codeElement);
+          message.appendChild(preElement);
+
+          const copyButton = document.createElement('span');
+          copyButton.classList.add('copy-icon');
+          copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+          copyButton.onclick = () => copyToClipboard(text);
+          message.appendChild(copyButton);
+        } else {
+          const content = document.createElement('div');
+          content.innerHTML = text.replace(/\n/g, '<br>');
+          message.appendChild(content);
+        }
+      } else {
+        message.textContent = text;
+      }
+
+      const typingIndicator = document.querySelector('.typing-indicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+
+      chatMessages.appendChild(message);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            z-index: 1000;
+            animation: fadeInOut 2s ease-in-out forwards;
+        `;
+        toast.textContent = 'Kode berhasil disalin!';
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.remove(), 2000);
+      }).catch(err => {
+        console.error('Gagal menyalin kode:', err);
+        alert('Gagal menyalin kode');
+      });
+    }
+
+    async function getAIResponse(message) {
+      try {
+        const typingIndicator = showTypingIndicator();
+
+        const response = await axios.post('https://luminai.my.id/', {
+          content: message,
+          cName: "Rifky-AI",
+          cID: "RifkyShre"
+        });
+
+        typingIndicator.remove();
+        return response.data.result || 'Maaf, saya tidak dapat memahami permintaan Anda.';
+      } catch (error) {
+        console.error('Error:', error);
+        return 'Maaf, terjadi kesalahan saat memproses permintaan Anda.';
+      }
+    }
+
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      messageInput.disabled = true;
+      sendButton.disabled = true;
+
+      appendMessage(message, 'user');
+      messageInput.value = '';
+
+      try {
+        const botResponse = await getAIResponse(message);
+        appendMessage(botResponse, 'bot', true);
+      } catch (error) {
+        appendMessage('Maaf, terjadi kesalahan saat memproses pesan Anda.', 'bot');
+      } finally {
+        messageInput.disabled = false;
+        sendButton.disabled = false;
+        messageInput.focus();
+      }
+    }
+
+    function checkEnter(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+
+    messageInput.addEventListener('keydown', checkEnter);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        appendMessage('Halo! Saya RifkyShre-AI. Ada yang bisa saya bantu?', 'bot');
+      }, 500);
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        15% { opacity: 1; transform: translate(-50%, 0); }
+        85% { opacity: 1; transform: translate(-50%, 0); }
+        100% { opacity: 0; transform: translate(-50%, -20px); }
+    }
+`;
+    document.head.appendChild(style);
+  </script>
+</body>
+
+</html>
